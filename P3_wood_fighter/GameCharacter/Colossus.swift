@@ -6,6 +6,6 @@ class Colossus: Character {
         currentHealth = 100
         type = GameCharacter.Colossus
         custom = "🗿"
-        weapon = Mass(damage: 50)
+        weapon = Mass(damage: COLOSSUS_DAMAGE_TEST)
     }
 }

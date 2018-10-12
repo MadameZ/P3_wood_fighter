@@ -6,7 +6,7 @@ class Mage: Character {
         currentHealth = 50
         type = GameCharacter.Mage
         custom = "👨‍🔬"
-        weapon = Scepter(healing: 50)
+        weapon = Scepter(healing: MAGE_HEALING_TEST)
         
     }
     

@@ -6,6 +6,6 @@ class Dwarf: Character {
         currentHealth = 100
         type = GameCharacter.Colossus
         custom = "🎭"
-        weapon = Axe(damage: 50)
+        weapon = Axe(damage: DWARF_DAMAGE_TEST)
     }
 }

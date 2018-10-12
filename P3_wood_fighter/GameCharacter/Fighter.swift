@@ -6,6 +6,6 @@ class Fighter: Character {
         currentHealth = 100
         type = GameCharacter.Fighter
         custom = "⚔️"
-        weapon = Sword(damage: 50)
+        weapon = Sword(damage: SWORD_DAMAGE_TEST)
     }
 }

@@ -3,10 +3,9 @@ class Game {
     
     var players: [Player] = []
     var counter: Int = 0
-    private var entryUser: String = ""
     
     //==================================
-    //MARK: - The flow of the game
+    //MARK:(Game) - The flow of the game
     //==================================
     func startNewGame() {
         counter = 0
@@ -17,7 +16,7 @@ class Game {
         fight()
     }
     //==================================
-    //MARK: - Assign players
+    //MARK:(Game) - Assign players
     //==================================
     private func initializePlayer() {
         for numberOfPlayer in NB_MIN_OF_PLAYER...NB_MAX_OF_PLAYERS {
@@ -25,42 +24,57 @@ class Game {
         }
     }
     //==================================
-    //MARK: - Assign team's names
+    //MARK:(Game) - Assign team's names
     //==================================
     private func assignNameTeam() {
-        var enterName : String = ""
+        var enterName: String = ""
+        var namesOk: Bool = true
+        var entryUser: String = ""
         players.forEach { player in
             repeat {
-                print("Joueur \(player.playerKey). Donnez un nom à votre équipe : ", terminator:"")
-                if let nameTeamTemp = readLine() {
-                    enterName = nameTeamTemp
+                namesOk = true
+                print("\(LEAD) Joueur \(player.playerKey). Donnez un nom à votre équipe : ", terminator:"")
+                // Here is a check for valid value
+                guard let nameTeamTemp = readLine() else {
+                    print("Le nom doit avoir une valeur")
+                    return // if it false the else statement excecutes will exit the method
                 }
-                print("Le nom : \(enterName) vous convient-il ? 1.Yes or 2.No : ", terminator:"")
-                entryUser = readLine()!
-                switch entryUser {
-                case "1":
-                    print("Super.")
-                case "2":
-                    print("On reprend... ")
-                default:
-                    print("Saisie incorrecte. Donnez un nom à votre équipe : ", terminator:"")
+                enterName = nameTeamTemp
+                if players.first?.name.lowercased() == enterName.lowercased() {
+                    print("⛔️ Le nom des deux équipes est le même. Veuillez recommencer.")
+                    print()
+                    namesOk = false
+                } else {
+                    print("\(LEAD) Le nom \(enterName), vous convient-il ? ✅ Si oui, tapez sur \"Entrée\" ; sinon 🛑 tapez \"2\" : ", terminator:"")
+                    entryUser = readLine()!
+                    entryUser = entryUser.isEmpty ? "1" : entryUser
+                        switch entryUser {
+                        case "1":
+                            print("✅ Super.")
+                        case "2":
+                            print("🛑 On reprend... ")
+                        default:
+                            print("Saisie incorrecte. Donnez un nom à votre équipe : ", terminator:"")
+                        }
                 }
-            } while entryUser != "1"
+                
+            } while !namesOk || entryUser != "1"
             player.name = enterName
             print(SEPARATOR_SCALE)
             print()
         }
     }
     //==================================
-    //MARK: - Build a team
+    //MARK:(Game) - Build a team
     //==================================
     private func assignTeam() {
         players.forEach { player in
-            print("Joueur \(player.playerKey) : \(player.name)! Constituez votre équipe.")
+            Message.teamBuildingTitle()
             player.teamBuilding(playerList: players)
             print(SEPARATOR_SCALE)
             print()
         }
+        Message.teamDescription()
         players.forEach { player in
             player.displayTeam()
             print()
@@ -69,10 +83,10 @@ class Game {
         print()
     }
     //==================================
-    //MARK: - Make the action
+    //MARK:(Game) - Make the action
     //==================================
     private func fight()  {
-        print("LET'S START TO FIGHT")
+        Message.startToFight()
         print()
         while !gameOver() {
             counter += 1
@@ -84,12 +98,16 @@ class Game {
             } else {
                 players.reverse()
             }
-            print()
-            print("⚡️Joueur \(playerAttack.playerKey) de l'équipe \(playerAttack.name) à l'attaque⚡️ ")
+            print("                                  ROUND \(counter)")
+            print(SEPARATOR_MIDDLE_SCALE_ROUND)
+            print("                 🔱 Joueur \(playerAttack.playerKey) de l'équipe \(playerAttack.name) à l'attaque 🔱 ")
             playerAttack.action(playerOpposite: playerOpposite, counter: counter)
+            print("\(LEAD) Appuyer sur \"entrer\" pour continuer.")
+            print(SEPARATOR_SCALE)
+            var _ = readLine()
             if gameOver() {
-                print()
-                print("🎈Joueur \(playerAttack.playerKey) de l'équipe \(playerAttack.name) a gagné en \(counter) tours !!!!!! 🎈🎈")
+                Message.congratulations()
+                print("          🎈Joueur \(playerAttack.playerKey) de l'équipe \(playerAttack.name) a gagné en \(counter) tours !!!!!! 🎈🎈")
                 print()
                 print(SEPARATOR_SCALE)
             }
@@ -98,7 +116,7 @@ class Game {
     
     
     //==================================
-    //MARK: - Game is over
+    //MARK:(Game) - Game is over
     //==================================
     private func gameOver() -> Bool {
         var AliveTeams: Int = 0
@@ -114,15 +132,17 @@ class Game {
         }
     }
     //==================================
-    //MARK: - Replay
+    //MARK:(Game) - Play again or no
     //==================================
     func rePlay() -> Bool {
         var startAgain: Bool = true
         var response : String = ""
+        var entryUser: String = ""
         while response != "ok" {
             print()
-            print("Voulez-vous rejouer? 1.Yes or 2.No : ", terminator:"")
+            print("\(LEAD) Voulez-vous rejouer?  ✅ Si oui, tapez sur \"Entrée\" ; sinon 🛑 tapez \"2\" : ", terminator:"")
             entryUser = readLine()!
+            entryUser = entryUser.isEmpty ? "1" : entryUser
             if let responseSecure = Int(entryUser) {
                 switch responseSecure {
                 case 1:
